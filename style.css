@@ -208,6 +208,14 @@ th {
 }
 .gss-table .model-track { background: var(--color-model); }
 .gss-table .agent-track { background: var(--color-agent); }
+.gss-table .maturity-col {
+  width: 7rem;
+  font-size: 0.75rem;
+  font-style: italic;
+  text-align: center;
+  vertical-align: middle;
+  background: var(--color-surface);
+}
 .gss-table th.model-track,
 .gss-table th.agent-track {
   min-width: 22rem;
