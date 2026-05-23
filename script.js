@@ -1,6 +1,35 @@
+// ── Theme Toggle ──
+const themeToggle = document.getElementById('theme-toggle');
+const html = document.documentElement;
+
+function getPreferredTheme() {
+  const stored = localStorage.getItem('theme');
+  if (stored) return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function setTheme(theme) {
+  html.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+}
+
+// Apply on load (before paint to avoid flash)
+setTheme(getPreferredTheme());
+
+themeToggle.addEventListener('click', () => {
+  const current = html.getAttribute('data-theme');
+  setTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+// React to OS preference changes
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+  if (!localStorage.getItem('theme')) {
+    setTheme(e.matches ? 'dark' : 'light');
+  }
+});
+
 // ── Accordion Logic ──
 const headers = document.querySelectorAll('.accordion-header');
-const bodies = document.querySelectorAll('.accordion-body');
 
 function openSection(section) {
   const header = section.querySelector('.accordion-header');
@@ -57,18 +86,15 @@ if (tocClose) {
 const tocLinks = tocSidebar.querySelectorAll('a');
 tocLinks.forEach(link => {
   link.addEventListener('click', (e) => {
-    // On mobile, close the sidebar
     if (window.innerWidth <= 1100) {
       tocSidebar.classList.remove('open');
     }
 
-    // Open the corresponding accordion section
     const sectionId = link.getAttribute('data-section');
     if (sectionId) {
       const section = document.getElementById('section-' + sectionId);
       if (section) {
         openSection(section);
-        // Scroll to the section after a small delay for the accordion to expand
         setTimeout(() => {
           section.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 100);
